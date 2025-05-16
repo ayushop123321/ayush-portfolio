@@ -26,10 +26,14 @@ const Hero = () => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     function drawMatrix() {
-      const context = ctx!;
+      const currentCanvas = canvasRef.current;
+      if (!currentCanvas) return;
+      
+      const context = ctx;
+      if (!context) return;
       
       context.fillStyle = 'rgba(0, 0, 0, 0.05)';
-      context.fillRect(0, 0, canvas.width, canvas.height);
+      context.fillRect(0, 0, currentCanvas.width, currentCanvas.height);
 
       context.fillStyle = '#0f0';
       context.font = '15pt monospace';
