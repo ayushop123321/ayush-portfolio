@@ -20,6 +20,24 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Admin Panel Setup
+
+This project includes an admin panel for managing messages and viewing analytics. To set it up:
+
+1. Create a Firebase project at [https://console.firebase.google.com/](https://console.firebase.google.com/)
+2. Enable Firebase Authentication with Email/Password provider
+3. Create a Firestore database in test mode
+4. Register a web app in your Firebase project and get your configuration
+5. Copy `.env.local.example` to `.env.local` and fill in your Firebase configuration
+6. Set the `NEXT_PUBLIC_ADMIN_EMAIL` to the email you want to use for admin access
+7. Create a user in Firebase Authentication with the admin email
+8. Access the admin panel at `/admin/login`
+
+The admin panel includes:
+- Real-time message management system
+- Analytics dashboard with message statistics
+- Secure authentication system
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

@@ -4,10 +4,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -60,35 +62,30 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navItems.map((item, index) => (
-            <motion.div
-              key={item.name}
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
+        <nav className="hidden md:flex items-center space-x-6">
+          {navItems.map((item) => (
+            <Link
+              key={item.path}
+              href={item.path}
+              className="text-gray-300 hover:text-white transition-colors"
             >
-              <Link 
-                href={item.path}
-                className="font-medium text-gray-200 hover:text-white relative group text-sm uppercase tracking-wider"
-              >
-                {item.name}
-                <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            </motion.div>
-          ))}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5, delay: 0.6 }}
-          >
-            <Link 
-              href="/contact" 
-              className="py-2 px-6 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full text-white font-medium hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300"
-            >
-              Hire Me
+              {item.name}
             </Link>
-          </motion.div>
+          ))}
+          {isAdmin && (
+            <Link
+              href="/admin/dashboard"
+              className="text-purple-400 hover:text-purple-300 transition-colors"
+            >
+              Admin
+            </Link>
+          )}
+          <Link
+            href="/contact"
+            className="py-2 px-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-md hover:shadow-lg hover:shadow-purple-500/20 transition-all"
+          >
+            Hire Me
+          </Link>
         </nav>
 
         {/* Mobile Menu Button */}
@@ -107,34 +104,40 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Navigation */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="md:hidden bg-black/95 backdrop-blur-md"
-        >
-          <div className="px-4 py-5 flex flex-col gap-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.path}
-                onClick={() => setIsOpen(false)}
-                className="text-gray-300 hover:text-white py-2 block border-b border-gray-800"
-              >
-                {item.name}
-              </Link>
-            ))}
+      <div
+        className={`${
+          isOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
+        } transform fixed top-0 right-0 w-64 h-full bg-black/90 backdrop-blur-md z-50 transition-all duration-300 ease-in-out overflow-y-auto p-8`}
+      >
+        <nav className="flex flex-col space-y-6 mt-10">
+          {navItems.map((item) => (
             <Link
-              href="/contact"
-              onClick={() => setIsOpen(false)}
-              className="py-2 px-6 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full text-white font-medium hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 w-fit mt-2"
+              key={item.path}
+              href={item.path}
+              className="text-gray-300 hover:text-white transition-colors"
+              onClick={toggleMenu}
             >
-              Hire Me
+              {item.name}
             </Link>
-          </div>
-        </motion.div>
-      )}
+          ))}
+          {isAdmin && (
+            <Link
+              href="/admin/dashboard"
+              className="text-purple-400 hover:text-purple-300 transition-colors"
+              onClick={toggleMenu}
+            >
+              Admin
+            </Link>
+          )}
+          <Link
+            href="/contact"
+            className="py-2 px-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-md hover:shadow-lg hover:shadow-purple-500/20 transition-all text-center"
+            onClick={toggleMenu}
+          >
+            Hire Me
+          </Link>
+        </nav>
+      </div>
     </header>
   );
 };
